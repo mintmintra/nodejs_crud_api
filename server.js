@@ -28,8 +28,23 @@ app.post('/api/createmovie', (req, res) => {
     if(moviename && mil){
       db.query('insert into tbl_movie (name, mil) values (?,?) ', [
         moviename, mil
-      ])
+      ],(err, resp, field) => {
+        if(resp){
+          return res.status(200).json({
+            RespCode: 200,
+            RespMessage: "success"
+          })
+        } else {
+          console.log('ERR 1! : Bad Sql')
+          return res,status(200).json({
+            RespCode: 400,
+            RespMessage: 'bad: bad sql',
+            Log: 2
+    })
+        }
+      })
     } else {
+      console.log('ERR 2! : Invalid request')
       return res,status(200).json({
       RespCode: 400,
       RespMessage: 'bad: Invalid request',
@@ -38,7 +53,7 @@ app.post('/api/createmovie', (req, res) => {
     }
   }
   catch(error){
-    console.log('ERR! :', error)
+    console.log('ERR 0! :', error)
     return res,status(200).json({
       RespCode: 400,
       RespMessage: 'bad',
