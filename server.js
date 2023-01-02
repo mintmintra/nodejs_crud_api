@@ -2,6 +2,10 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql');
 const _ = require('lodash');
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true}))
 
 const server = app.listen(3000, () => {
     console.log('Nodejs is running on port 3000!')
@@ -23,7 +27,8 @@ db.connect(function(err) {
 app.post('/api/createmovie', (req, res) => {
   var moviename = _.get(req, ['body', 'name']);
   var mil = _.get(req, ['body', 'mil']);
-  
+  console.log('moviename', moviename)
+  console.log('mil',mil)
   try{
     if(moviename && mil){
       db.query('insert into tbl_movie (name, mil) values (?,?) ', [
