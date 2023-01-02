@@ -41,7 +41,7 @@ app.post('/api/createmovie', (req, res) => {
           })
         } else {
           console.log('ERR 1! : Bad Sql')
-          return res,status(200).json({
+          return res.status(200).json({
             RespCode: 400,
             RespMessage: 'bad: bad sql',
             Log: 2
@@ -50,7 +50,7 @@ app.post('/api/createmovie', (req, res) => {
       })
     } else {
       console.log('ERR 2! : Invalid request')
-      return res,status(200).json({
+      return res.status(200).json({
       RespCode: 400,
       RespMessage: 'bad: Invalid request',
       Log: 1
@@ -59,7 +59,7 @@ app.post('/api/createmovie', (req, res) => {
   }
   catch(error){
     console.log('ERR 0! :', error)
-    return res,status(200).json({
+    return res.status(200).json({
       RespCode: 400,
       RespMessage: 'bad',
       Log: 0
@@ -86,7 +86,7 @@ app.get('/api/getallmovie', (req, res) => {
 
       } else {
         console.log('ERR 1! : not found data')
-        return res,status(200).json({
+        return res.status(200).json({
         RespCode: 400,
         RespMessage: 'bad: not found data',
         Log: 1
@@ -95,7 +95,7 @@ app.get('/api/getallmovie', (req, res) => {
     })
   } catch(error){
     console.log('ERR 0! :', error)
-    return res,status(200).json({
+    return res.status(200).json({
       RespCode: 400,
       RespMessage: 'bad',
       Log: 0
@@ -126,7 +126,7 @@ app.get('/api/getmoviebyid', (req, res) => {
 
       } else {
         console.log('ERR 1! : not found data')
-        return res,status(200).json({
+        return res.status(200).json({
         RespCode: 400,
         RespMessage: 'bad: not found data',
         Log: 1
@@ -135,7 +135,7 @@ app.get('/api/getmoviebyid', (req, res) => {
     })
       } else {
         console.log('ERR 2! : Invalid data')
-        return res,status(200).json({
+        return res.status(200).json({
         RespCode: 400,
         RespMessage: 'bad: Invalid data',
         Log: 2
@@ -143,7 +143,91 @@ app.get('/api/getmoviebyid', (req, res) => {
       }
   } catch(error){
     console.log('ERR 0! :', error)
-    return res,status(200).json({
+    return res.status(200).json({
+      RespCode: 400,
+      RespMessage: 'bad',
+      Log: 0
+    })
+  }
+})
+
+//update
+app.put('/api/updatemovie', (req, res) => {
+  var id = _.get(req, ["body", "id"])
+  var name = _.get(req, ["body", "name"])
+  var mil = _.get(req, ["body", "mil"])
+
+  try{
+    if(id && name && mil){
+      db.query('update tbl_movie set name = ?, mil = ? where id = ?', [
+        name, mil, parseInt(id)
+      ], (err, data, fil) => {
+        if(data){
+          return res.status(200).json({
+            RespCode: 200,
+            RespMessage: 'success'
+          })
+        } else {
+          console.log('ERR 2! : Update fail', error)
+          return res.status(200).json({
+          RespCode: 400,
+          RespMessage: 'bad: Update fail',
+          Log: 2
+    })
+        }
+      })
+    } else {
+      console.log('ERR 1! : Invalid data', error)
+      return res.status(200).json({
+      RespCode: 400,
+      RespMessage: 'bad: Invalid data',
+      Log: 1
+    })
+    }
+
+  } catch(error){
+    console.log('ERR 0! :', error)
+    return res.status(200).json({
+      RespCode: 400,
+      RespMessage: 'bad',
+      Log: 0
+    })
+  }
+})
+
+//delete
+app.delete('/api/deletemoviebyid', (req, res) => {
+  var id = _.get(req, ["body","id"]);
+  try{
+    if(id){
+      db.query('delete from tbl_movie where id = ? ', [
+        parseInt(id)
+      ], (err, resp, fil) => {
+        if(resp) {
+          return res.status(200).json({
+          RespCode: 200,
+          RespMessage: 'good'
+    })
+        } else {
+          console.log('ERR 2! : bad sql')
+          return res.status(200).json({
+          RespCode: 400,
+          RespMessage: 'bad: bad sql',
+          Log: 2
+    })
+        }
+      })
+    } else {
+      console.log('ERR 1! : Invalid id')
+      return res.status(200).json({
+      RespCode: 400,
+      RespMessage: 'bad: Invalid id',
+      Log: 1
+    })
+    }
+  } catch(error){
+    console.log('ERR 0! :', error)
+    return res.status(200).json({
       RespCode: 400,
       RespMessage: 'bad',
       Log: 0
