@@ -67,4 +67,88 @@ app.post('/api/createmovie', (req, res) => {
   }
 })
 
+//get
+app.get('/api/getallmovie', (req, res) => {
+  try{
+    db.query('select * from tbl_movie', [],
+    (err,data,fil) => {
+      if(data && data[0]){
+
+        for(let i = 0; i < data.length; i++){
+          delete data[i].id
+        }
+
+        return res.status(200).json({
+          RespCode: 200,
+          RespMessage: 'success',
+          Result: data
+        })
+
+      } else {
+        console.log('ERR 1! : not found data')
+        return res,status(200).json({
+        RespCode: 400,
+        RespMessage: 'bad: not found data',
+        Log: 1
+    })
+      }
+    })
+  } catch(error){
+    console.log('ERR 0! :', error)
+    return res,status(200).json({
+      RespCode: 400,
+      RespMessage: 'bad',
+      Log: 0
+    })
+  }
+})
+
+//get by id
+app.get('/api/getmoviebyid', (req, res) => {
+  var movieid = _.get(req, ["body", "id"]);
+  try{
+      if(movieid) {
+        db.query('select * from tbl_movie where id = ?', [
+          movieid
+        ],
+    (err,data,fil) => {
+      if(data && data[0]){
+
+        for(let i = 0; i < data.length; i++){
+          delete data[i].id
+        }
+
+        return res.status(200).json({
+          RespCode: 200,
+          RespMessage: 'success',
+          Result: data
+        })
+
+      } else {
+        console.log('ERR 1! : not found data')
+        return res,status(200).json({
+        RespCode: 400,
+        RespMessage: 'bad: not found data',
+        Log: 1
+    })
+      }
+    })
+      } else {
+        console.log('ERR 2! : Invalid data')
+        return res,status(200).json({
+        RespCode: 400,
+        RespMessage: 'bad: Invalid data',
+        Log: 2
+    })
+      }
+  } catch(error){
+    console.log('ERR 0! :', error)
+    return res,status(200).json({
+      RespCode: 400,
+      RespMessage: 'bad',
+      Log: 0
+    })
+  }
+})
+
 module.exports = app;
